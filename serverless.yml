@@ -1,0 +1,67 @@
+service: serverless-step-functions
+frameworkVersion: '>=2.30.0'
+
+plugins:
+  - serverless-functions-base-path
+  - serverless-iam-roles-per-function
+  - serverless-dynamodb-local
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  resourcePrefix: ${self:service}-${self:provider.stage}
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+  functionsBasePath: src/functions
+
+  serverless-offline:
+    httpPort: 5000
+    lambdaPort: 5002
+    host: localhost
+    noPrependStageInUrl: true
+
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+      # Uncomment only if you already have a DynamoDB running locally
+      # noStart: true
+
+    seed:
+      test:
+        sources:
+          - table: ${self:custom.resourcePrefix}-user
+            sources: [./seed/users.json]
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 256
+  stage: dev
+  region: ap-southeast-2
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+  lambdaHashingVersion: 20201221
+
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    USER_TABLE: ${self:custom.resourcePrefix}-user
+
+functions:
+  - ${file(./resources/functions.yml)}
+
+resources:
+  - ${file(./resources/dynamodb.yml)}

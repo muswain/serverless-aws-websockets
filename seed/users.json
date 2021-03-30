@@ -1,0 +1,23 @@
+[
+  {
+    "pk": "john@gmail.com",
+    "sk": "profile",
+    "name": "john cena",
+    "city": "perth",
+    "country": "australia"
+  },
+  {
+    "pk": "smith@a.com",
+    "sk": "profile",
+    "name": "john smith",
+    "city": "mumbai",
+    "country": "india"
+  },
+  {
+    "pk": "julie@b.com",
+    "sk": "profile",
+    "name": "julie smith",
+    "city": "vancouver",
+    "country": "canada"
+  }
+]

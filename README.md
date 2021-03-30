@@ -1,6 +1,6 @@
-# Serverless - Step Functions
+# Serverless - AWS Web Sockets
 
-Serverless step functions
+AWS Web Sockets
 
 ## Installation/deployment instructions
 

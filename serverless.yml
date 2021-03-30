@@ -1,4 +1,4 @@
-service: serverless-step-functions
+service: serverless-aws-websockets
 frameworkVersion: '>=2.30.0'
 
 plugins:

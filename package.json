@@ -1,7 +1,7 @@
 {
-  "name": "serverless-step-functions",
+  "name": "serverless-aws-websockets",
   "version": "1.0.0",
-  "description": "Serverless step functions",
+  "description": "Serverless aws web sockets",
   "main": "serverless.ts",
   "scripts": {
     "start": "sls offline start",

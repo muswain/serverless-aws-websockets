@@ -1,5 +1,5 @@
-service: serverless-aws-websockets
-frameworkVersion: '>=2.30.0'
+service: serverless-websockets
+frameworkVersion: '=2.33.0'
 
 plugins:
   - serverless-functions-base-path

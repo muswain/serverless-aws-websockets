@@ -1,10 +1,10 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import { ok } from 'assert';
 import { queryUsers } from '../helpers/dynamodb';
 
-type GetUsersEvent = Pick<APIGatewayProxyEventV2, 'headers' | 'queryStringParameters'>;
+export type GetUsersEvent = Pick<APIGatewayProxyEventV2, 'queryStringParameters'>;
 
-export const getUsers: APIGatewayProxyHandler = async (event: GetUsersEvent) => {
+export const getUsers = async (event: GetUsersEvent): Promise<APIGatewayProxyResult> => {
   const name = event.queryStringParameters?.['name'];
 
   try {

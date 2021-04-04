@@ -9,11 +9,23 @@ Resources:
           AttributeType: S
         - AttributeName: sk
           AttributeType: S
+        - AttributeName: name
+          AttributeType: S
 
       KeySchema:
         - AttributeName: pk
           KeyType: HASH
         - AttributeName: sk
           KeyType: RANGE
+
+      GlobalSecondaryIndexes:
+        - IndexName: sk-name
+          KeySchema:
+            - AttributeName: sk
+              KeyType: HASH
+            - AttributeName: name
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
 
       BillingMode: PAY_PER_REQUEST

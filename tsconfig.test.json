@@ -7,6 +7,9 @@
     "noUnusedParameters": true,
     "removeComments": true
   },
-  "include": ["src/**/*.ts"],
+  "ts-node": {
+    "files": true
+  },
+  "include": ["src/**/*.ts", "./typings/**/*.d.ts"],
   "exclude": ["node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"]
 }

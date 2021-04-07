@@ -17,8 +17,8 @@ custom:
   functionsBasePath: src/functions
 
   serverless-offline:
-    httpPort: 5000
-    lambdaPort: 5002
+    websocketPort: 3001
+    lambdaPort: 3002
     host: localhost
     noPrependStageInUrl: true
 
@@ -39,26 +39,44 @@ custom:
     seed:
       test:
         sources:
-          - table: ${self:custom.resourcePrefix}-user
-            sources: [./seed/users.json]
+          - table: ${self:custom.resourcePrefix}-connections
+            sources: [./seed/connections.json]
 
 package:
   individually: true
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   memorySize: 256
   stage: dev
   region: ap-southeast-2
-  apiGateway:
-    minimumCompressionSize: 1024
-    shouldStartNameWithService: true
+  websocketsApiName: serverless-websockets-api # Use a custom name for the websockets API
+  websocketsApiRouteSelectionExpression: $request.body.action # custom route selection expression
   lambdaHashingVersion: 20201221
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 'execute-api:ManageConnections'
+      Resource:
+        - 'arn:aws:execute-api:*:*:**/@connections/*'
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:custom.resourcePrefix}-connections
 
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    USER_TABLE: ${self:custom.resourcePrefix}-user
+    CONNECTIONS_TABLE: ${self:custom.resourcePrefix}-connections
+    APIG_ENDPOINT:
+      Fn::Join:
+        - ''
+        - - Ref: WebsocketsApi
+          - .execute-api.
+          - Ref: AWS::Region
+          - .amazonaws.com/
+          - ${self:provider.stage}
 
 functions:
   - ${file(./resources/functions.yml)}

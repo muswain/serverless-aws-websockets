@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 
 const region = 'ap-southeast-2';
 let client = process.env.IS_OFFLINE
@@ -8,20 +8,12 @@ let client = process.env.IS_OFFLINE
 
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
-export const queryUsers = async (name: string): Promise<User[] | []> => {
-  const queryCommand = new QueryCommand({
+export const addConnection = async (email: string, connectionId: string) => {
+  const putCommand = new PutCommand({
     TableName: process.env.USER_TABLE,
-    IndexName: 'sk-name',
-    KeyConditionExpression: 'sk = :pk AND begins_with(#user, :name)',
-    ExpressionAttributeNames: { '#user': 'name' },
-    ExpressionAttributeValues: { ':pk': 'profile', ':name': name },
+    Item: { pk: email, sk: connectionId },
+    ConditionExpression: 'attribute_not_exists(pk)',
   });
 
-  const { Items } = await ddbDocClient.send(queryCommand);
-  const users: User[] = Items.map((item) => {
-    const { name, city, country, pk: email } = item;
-    return { name, city, country, email };
-  });
-
-  return users;
+  await ddbDocClient.send(putCommand);
 };

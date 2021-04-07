@@ -1,20 +1,11 @@
-GetUsers:
-  name: ${self:custom.resourcePrefix}-GetUsers
-  handler: /user-handler.getUsers
-  description: Gets a list of users whose name startswith the given string
-  iamRoleStatementsName: ${self:custom.resourcePrefix}-GetUsers-role
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-      Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:custom.resourcePrefix}-user
-
+# manage connection and disconnection of clients
+ConnectionManager:
+  name: ${self:custom.resourcePrefix}-ConnectionManager
+  handler: /connection-handler.connectionManager
+  description: Websocket connection manager
   events:
-    - http:
-        method: get
-        path: users
-        cors: true
-        request:
-          parameters:
-            querystrings:
-              name: true
+    - websocket:
+        route:
+          - $connect
+          - $disconnect
+          - $default

@@ -1,0 +1,5 @@
+[
+  { "pk": "john@gmail.com", "sk": "123" },
+  { "pk": "smith@a.com", "sk": "345" },
+  { "pk": "julie@b.com", "sk": "5555" }
+]

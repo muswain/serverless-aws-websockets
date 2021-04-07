@@ -1,6 +1,7 @@
 # Serverless - AWS Web Sockets
 
 AWS Web Sockets
+This use serverless-offline plugin for running websockets locally
 
 ## Installation/deployment instructions
 
@@ -40,7 +41,7 @@ The project code base is mainly located within the `src` folder. This folder is 
 |   ├── dynamodb.yml
 ├── src
 │   ├── functions            # Lambda configuration and source code folder
-│   │   ├── user-handler.ts
+│   │   ├── connection-handler.ts
 ├── package.json
 ├── serverless.yml           # Serverless service file
 ├── tsconfig.json            # Typescript compiler configuration

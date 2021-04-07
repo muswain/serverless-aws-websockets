@@ -5,7 +5,10 @@ ConnectionManager:
   description: Websocket connection manager
   events:
     - websocket:
-        route:
-          - $connect
-          - $disconnect
-          - $default
+        route: $connect
+    - websocket:
+        route: $disconnect
+    - websocket:
+        route: $broadcast
+    - websocket:
+        route: $default

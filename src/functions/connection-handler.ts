@@ -1,38 +1,66 @@
-import { APIGatewayEvent } from 'aws-lambda';
 import { ApiGatewayManagementApi, PostToConnectionCommand } from '@aws-sdk/client-apigatewaymanagementapi';
-import { addConnection } from '../helpers/dynamodb';
+import { addConnection, getConnections, removeConnection } from '../helpers/dynamodb';
 
 const apig = process.env.IS_OFFLINE
   ? new ApiGatewayManagementApi({ endpoint: 'http://localhost:3001' })
   : new ApiGatewayManagementApi({ endpoint: process.env.APIG_ENDPOINT });
 
-export const connectionManager = async (event: APIGatewayEvent) => {
+export const connectionManager = async (event: any) => {
   const {
     requestContext: { connectionId, routeKey },
   } = event;
 
-  console.info(connectionId);
-  if (routeKey === '$connect') {
-    // handle new connection
+  console.info('event received: ', connectionId, routeKey);
 
-    await addConnection('a', connectionId);
-    await apig.send(
-      new PostToConnectionCommand({
-        ConnectionId: connectionId,
-        Data: Buffer.from('hello'),
-      })
-    );
+  switch (routeKey) {
+    case '$connect':
+      await addConnection(connectionId);
+      await apig.send(
+        new PostToConnectionCommand({
+          ConnectionId: connectionId,
+          Data: Buffer.from(
+            JSON.stringify({
+              message: `connection ${connectionId} established`,
+            })
+          ),
+        })
+      );
 
-    return {
-      statusCode: 200,
-    };
-  }
+      break;
 
-  if (routeKey === '$disconnect') {
-    // handle disconnection
-    return {
-      statusCode: 200,
-    };
+    case '$disconnect':
+      await removeConnection(connectionId);
+      await apig.send(
+        new PostToConnectionCommand({
+          ConnectionId: connectionId,
+          Data: Buffer.from(
+            JSON.stringify({
+              message: `connection ${connectionId} disconnected`,
+            })
+          ),
+        })
+      );
+
+      break;
+
+    case '$broadcast':
+      const connectionIds = await getConnections();
+      console.info('connectionsIds: ', connectionIds);
+      for (const connectionId of connectionIds) {
+        await apig.send(
+          new PostToConnectionCommand({
+            ConnectionId: connectionId,
+            Data: Buffer.from(
+              JSON.stringify({
+                message: `hello ${connectionId}`,
+              })
+            ),
+          })
+        );
+      }
+      break;
+    default:
+      break;
   }
 
   // $default handler

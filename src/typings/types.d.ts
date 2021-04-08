@@ -1,10 +1,4 @@
-interface User {
-  email: string;
-  name: string;
-  city: string;
-  country: string;
+interface WsRequest {
+  action: string;
+  message: string;
 }
-
-type UserDBItem = User & { pk: string; sk: string };
-
-type UserTypes = 'profile';

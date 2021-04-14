@@ -1,7 +1,7 @@
 # Serverless - AWS Web Sockets
 
 AWS Web Sockets
-This use serverless-offline plugin for running websockets locally
+This uses `serverless-offline` plugin for running websockets locally
 
 ## Installation/deployment instructions
 
@@ -21,12 +21,19 @@ Depending on your preferred package manager, follow the instructions below to de
 
 ### Locally
 
-In order to test the user function locally, run the following command:
+- `npm run start` - This should start the serverless-offline websocket endpoint on port `3001`
+- Once the server is started, you can use any websocket client to connect on `http://localhost:3001`.
+- For chrome browser, can use Websocket King Client add-on for adding multiple client connections
+- Once multiple clients are connected, pass a payload
 
-- `npx sls invoke local -f GetUsers` if you're using NPM
-- `yarn sls invoke local -f GetUsers` if you're using Yarn
+```json
+{
+  "action": "$broadcast",
+  "message": "hello everyone"
+}
+```
 
-Check the [sls invoke local command documentation](https://www.serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/) for more information.
+- This should broadcast the message `hello everyone` to all the connected clients
 
 ### Project structure
 

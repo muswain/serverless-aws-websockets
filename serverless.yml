@@ -1,5 +1,5 @@
 service: serverless-websockets
-frameworkVersion: '=2.50.0'
+frameworkVersion: '=2.51.2'
 
 plugins:
   - serverless-functions-base-path

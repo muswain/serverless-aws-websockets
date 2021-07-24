@@ -1,7 +1,7 @@
 # Serverless - AWS Web Sockets
 
 AWS Web Sockets
-This uses `serverless-offline` plugin for running websockets locally
+This uses `serverless-offline` plugin for running websockets locally and AWS SDKv3
 
 ## Installation/deployment instructions
 
@@ -13,11 +13,6 @@ Depending on your preferred package manager, follow the instructions below to de
 
 - Run `npm i` to install the project dependencies
 - Run `npx sls deploy` to deploy this stack to AWS
-
-### Using Yarn
-
-- Run `yarn` to install the project dependencies
-- Run `yarn sls deploy` to deploy this stack to AWS
 
 ### Locally
 
